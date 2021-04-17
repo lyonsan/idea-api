@@ -1,31 +1,31 @@
 class CategoriesController < ApplicationController
   def index
-    category = Category.find(params[:category_id])
-    ideas = category.ideas.all
-    render json: ideas
   end
   def create
-    category = Category.where( name: params[:name] )
-    if category.exists?
-      @category = Category.find_by(name: params[:name])
+    category = Category.find_by( name: params[:category_name] )
+    if category.present? && params[:body].present?
+      @category = Category.find_by(name: params[:category_name])
       @idea = @category.ideas.build(idea_params)
       if @idea.save
         render json: { status: 201 }
       else
         render json: { status: 422 }
       end
-    else
+    elsif params[:body].present?
+      params[:name] = params[:category_name]
       @category = Category.new(category_params)
       if @category.save
         @idea = @category.ideas.new(idea_params)
         if @idea.save
-          render json: { status: 2011 }
+          render json: { status: 201 }
         else
           render json: { status: 422 }
         end
       else
         render json: { status: 422 }
       end
+    else
+      render json: { status: 422 }
     end
   end
 
