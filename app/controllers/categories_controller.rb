@@ -1,16 +1,35 @@
 class CategoriesController < ApplicationController
   def index
+    data = []
+    response = { data: data }
     if params[:category_name]
       @category = Category.find_by( name: params[:category_name] )
       if  @category.present?
         @ideas = Idea.where( category_id: @category.id )
-        render json: @ideas
+        @ideas.each do |idea|
+          category_data = {
+            id: idea.id,
+            category: @category.name,
+            body: idea.body
+          }
+          data << category_data
+        end
+        render json: response
       else
-        render json: { status: 422 }
+        render json: { status: 404 }
       end
     else
       @ideas = Idea.all
-      render json: @ideas
+      @ideas.each do |idea|
+        category = Category.find(idea.category_id)
+        category_data = {
+          id: idea.id,
+          category: category.name,
+          body: idea.body
+        }
+        data << category_data
+      end
+      render json: response
     end
   end
   def create
