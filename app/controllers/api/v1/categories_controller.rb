@@ -18,7 +18,7 @@ module Api
             end
             render json: response
           else
-            render json: { status: 404 }
+            render status: 404, json: { status: 404, message: "Not Found" }
           end
         else
           @ideas = Idea.all
@@ -40,9 +40,9 @@ module Api
           @category = Category.find_by(name: params[:category_name])
           @idea = @category.ideas.build(idea_params)
           if @idea.save
-            render json: { status: 201 }
+            render status: 201, json: { status: 201, message: "Created" }
           else
-            render json: { status: 422 }
+            render status: 422, json: { status: 422, message: "Unprocessable Entity" }
           end
         elsif params[:body].present?
           params[:name] = params[:category_name]
@@ -50,15 +50,15 @@ module Api
           if @category.save
             @idea = @category.ideas.new(idea_params)
             if @idea.save
-              render json: { status: 201 }
+              render status: 201, json: { status: 201, message: "Created" }
             else
-              render json: { status: 422 }
+              render status: 422, json: { status: 422, message: "Unprocessable Entity" }
             end
           else
-            render json: { status: 422 }
+            render status: 422, json: { status: 422, message: "Unprocessable Entity" }
           end
         else
-          render json: { status: 422 }
+          render status: 422, json: { status: 422, message: "Unprocessable Entity" }
         end
       end
 
