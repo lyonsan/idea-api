@@ -3,7 +3,6 @@ module Api
     class CategoriesController < ApplicationController
       def index
         data = []
-        response = { data: data }
         if params[:category_name]
           @category = Category.find_by( name: params[:category_name] )
           if  @category.present?
@@ -16,7 +15,7 @@ module Api
               }
               data << category_data
             end
-            render json: response
+            render json: { data: data }
           else
             render status: 404, json: { status: 404, message: "Not Found" }
           end
@@ -31,7 +30,7 @@ module Api
             }
             data << category_data
           end
-          render json: response
+          render json: { data: data }
         end
       end
       def create
