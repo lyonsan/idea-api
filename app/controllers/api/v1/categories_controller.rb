@@ -4,9 +4,9 @@ module Api
       def index
         data = []
         if params[:category_name]
-          @category = Category.find_by( name: params[:category_name] )
-          if  @category.present?
-            @ideas = Idea.where( category_id: @category.id )
+          @category = Category.find_by(name: params[:category_name])
+          if @category.present?
+            @ideas = Idea.where(category_id: @category.id)
             @ideas.each do |idea|
               category_data = {
                 id: idea.id,
@@ -17,7 +17,7 @@ module Api
             end
             render json: { data: data }
           else
-            render status: 404, json: { status: 404, message: "Not Found" }
+            render status: 404, json: { status: 404, message: 'Not Found' }
           end
         else
           @ideas = Idea.all
@@ -33,15 +33,15 @@ module Api
           render json: { data: data }
         end
       end
+
       def create
-        @category = Category.find_by( name: params[:category_name] )
+        @category = Category.find_by(name: params[:category_name])
         if @category.present? && params[:body].present?
-          @category = Category.find_by(name: params[:category_name])
-          @idea = @category.ideas.build(idea_params)
+          @idea = @category.ideas.new(idea_params)
           if @idea.save
-            render status: 201, json: { status: 201, message: "Created" }
+            render status: 201, json: { status: 201, message: 'Created' }
           else
-            render status: 422, json: { status: 422, message: "Unprocessable Entity" }
+            render status: 422, json: { status: 422, message: 'Unprocessable Entity' }
           end
         elsif params[:body].present?
           params[:name] = params[:category_name]
@@ -49,15 +49,15 @@ module Api
           if @category.save
             @idea = @category.ideas.new(idea_params)
             if @idea.save
-              render status: 201, json: { status: 201, message: "Created" }
+              render status: 201, json: { status: 201, message: 'Created' }
             else
-              render status: 422, json: { status: 422, message: "Unprocessable Entity" }
+              render status: 422, json: { status: 422, message: 'Unprocessable Entity' }
             end
           else
-            render status: 422, json: { status: 422, message: "Unprocessable Entity" }
+            render status: 422, json: { status: 422, message: 'Unprocessable Entity' }
           end
         else
-          render status: 422, json: { status: 422, message: "Unprocessable Entity" }
+          render status: 422, json: { status: 422, message: 'Unprocessable Entity' }
         end
       end
 
@@ -70,7 +70,6 @@ module Api
       def idea_params
         params.permit(:body)
       end
-
     end
   end
 end

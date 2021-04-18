@@ -1,3 +1,2 @@
 class IdeasController < ApplicationController
-
 end
